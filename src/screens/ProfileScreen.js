@@ -1,14 +1,24 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "../features/userSlice";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { context } from "../App";
 import { auth } from "../firebase";
 import Nav from "../Nav";
-import PlansScreen from "./PlansScreen";
+import LoginScreen from "./LoginScreen";
 import s from "./ProfileScreen.module.css";
+import SignUpScreen from "./SignUpScreen";
 
-const ProfileScreen = () => {
-  const user = useSelector(selectUser);
-  return (
+const ProfileScreen = (login) => {
+  const consumer = useContext(context);
+  const navigate = useNavigate();
+  const handleSignOut = () => {
+    consumer.setIsLogin(false);
+    console.log(auth);
+    navigate("/");
+  };
+
+  return !login ? (
+    <SignUpScreen />
+  ) : (
     <div className={s.profileScreen}>
       <Nav />
       <div className={s.profileScreen_Body}>
@@ -20,15 +30,12 @@ const ProfileScreen = () => {
             alt=""
           />
           <div className={s.profileScreen_Details}>
-            <h2>{user.email}</h2>
+            {/* <h2>{user.email}</h2> */}
             <div className={s.profileScreen_Plans}>
               <h3>Plans</h3>
 
-              <PlansScreen />
               <button
-                onClick={() => {
-                  auth.signOut();
-                }}
+                onClick={handleSignOut}
                 className={s.profileScreen_SignOut}
               >
                 Sign Out

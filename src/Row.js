@@ -12,7 +12,7 @@ const Row = ({ title, fetchUrl, isLargeRow = false }) => {
 
   const handleCkick = (movie) => {
     return () => {
-      navigate(`movie/${movie.id}`);
+      navigate(`/movie/${movie.id}`);
     };
   };
 

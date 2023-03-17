@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import HomeScreen from "./HomeScreen";
 import s from "./LoginScreen.module.css";
 import SignUpScreen from "./SignUpScreen";
 
-const LoginScreen = () => {
+const LoginScreen = (login) => {
   const [signIn, setSignIn] = useState(false);
 
   return (
@@ -16,6 +17,7 @@ const LoginScreen = () => {
         <button className={s.loginScreenButton} onClick={() => setSignIn(true)}>
           Sign In
         </button>
+
         <div className={s.loginScreenGradient} />
       </div>
       <div className={s.loginScreenBody}>
@@ -29,9 +31,11 @@ const LoginScreen = () => {
               Ready to watch? Enter your email to create or restart your
               membership
             </h3>
+
             <div className={s.loginScreenInput}>
               <form>
                 <input type="email" placeholder="Email Adress" />
+
                 <button
                   className={s.LoginScreenGetStarted}
                   onClick={() => setSignIn(true)}

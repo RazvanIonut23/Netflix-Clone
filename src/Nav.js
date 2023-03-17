@@ -28,7 +28,6 @@ const Nav = () => {
             alt=""
           />
         </Link>
-
         <Link to="/profile">
           <img
             className={s.navAvatar}

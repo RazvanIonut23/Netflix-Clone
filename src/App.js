@@ -1,47 +1,42 @@
-import React, { useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import "./App.css";
 import HomeScreen from "./screens/HomeScreen";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginScreen from "./screens/LoginScreen";
 import { auth } from "./firebase";
-import { useDispatch, useSelector } from "react-redux";
-import { login, logout, selectUser } from "./features/userSlice";
 import ProfileScreen from "./screens/ProfileScreen";
 import Movie from "./Movie";
 
+export const context = createContext(null);
+
 function App() {
-  const user = useSelector(selectUser);
-  const dispatch = useDispatch();
+  const [isLogin, setIsLogin] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((userAuth) => {
-      if (userAuth) {
-        dispatch(
-          login({
-            uid: userAuth.uid,
-            email: userAuth.email,
-          })
-        );
-      } else {
-        dispatch(logout());
-      }
-    });
-
-    return unsubscribe;
-  }, []);
+  const value = {
+    isLogin: isLogin,
+    setIsLogin: setIsLogin,
+  };
 
   return (
-    <div className="App">
-      {/* {!user ? (
-        <LoginScreen />
-      ) : ( */}
-      <Routes>
-        <Route path="/" element={<HomeScreen />} />
-        <Route path="/profile" element={<ProfileScreen />} />
-        <Route path="movie/:id" element={<Movie />} />
-      </Routes>
-      {/* )} */}
-    </div>
+    <context.Provider value={value}>
+      <div className="App">
+        <Routes>
+          {isLogin === true && (
+            <Route path="/home" exact element={<HomeScreen />} />
+          )}
+          {isLogin === true && (
+            <Route exact path="/profile" element={<ProfileScreen />} />
+          )}
+          {isLogin === true && (
+            <Route exact path="movie/:id" element={<Movie />} />
+          )}
+
+          {isLogin === false && (
+            <Route exact path="/" element={<LoginScreen />} />
+          )}
+        </Routes>
+      </div>
+    </context.Provider>
   );
 }
 

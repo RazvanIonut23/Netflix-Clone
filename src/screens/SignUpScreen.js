@@ -1,57 +1,47 @@
-import React, { useRef } from "react";
-import { auth } from "../firebase";
+import React, { useContext, useEffect, useState } from "react";
+import { auth, provider, providerF } from "../firebase";
+import { signInWithPopup } from "firebase/auth";
 import s from "./SignUpScreen.module.css";
+import HomeScreen from "./HomeScreen";
+import { useNavigate } from "react-router-dom";
+import { context } from "../App";
 
 const SignUpScreen = () => {
-  const emailRef = useRef(null);
-  const passwordRef = useRef(null);
+  const consumer = useContext(context);
+  const navigate = useNavigate();
 
-  const register = (e) => {
-    e.preventDefault();
-    auth
-      .createUserWithEmailAndPassword(
-        emailRef.current.value,
-        passwordRef.current.value
-      )
-      .then((authUser) => {
-        console.log(authUser);
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+  const handleClick = () => {
+    signInWithPopup(auth, provider).then((data) => {
+      consumer.setIsLogin(true);
+      localStorage.setItem("email", data.user.email);
+      navigate("/home");
+    });
   };
 
-  const signIn = (e) => {
-    e.preventDefault();
-
-    auth
-      .signInWithEmailAndPassword(
-        emailRef.current.value,
-        passwordRef.current.value
-      )
-      .then((authUser) => {
-        console.log(authUser);
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+  const handleClickFacebook = () => {
+    signInWithPopup(auth, providerF).then((data) => {
+      consumer.setIsLogin(true);
+      localStorage.setItem("email", data.user.email);
+      navigate("/home");
+    });
   };
+
+  // useEffect(() => {
+  //   consumer.setIsLogin(localStorage.getItem("email"));
+  // }, []);
 
   return (
     <div className={s.signUpScreen}>
       <form>
         <h1>Sign In</h1>
-        <input type="email" placeholder="Email" ref={emailRef} />
-        <input placeholder="Password" type="password" ref={passwordRef} />
-        <button type="submit" onClick={signIn}>
-          Sign In
-        </button>
-        <h4>
-          <span className={s.signUpScreenGray}>New to Netflix? </span>
-          <span className={s.signUpScreenLink} onClick={register}>
-            Sign Up Now.
-          </span>
-        </h4>
+        <>
+          <button type="submit" onClick={handleClick}>
+            Sign In with google
+          </button>
+          <button type="submit" onClick={handleClickFacebook}>
+            Sign In with faceBook
+          </button>
+        </>
       </form>
     </div>
   );
