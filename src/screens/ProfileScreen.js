@@ -5,19 +5,20 @@ import { auth } from "../firebase";
 import Nav from "../Nav";
 import LoginScreen from "./LoginScreen";
 import s from "./ProfileScreen.module.css";
-import SignUpScreen from "./SignUpScreen";
 
 const ProfileScreen = (login) => {
   const consumer = useContext(context);
   const navigate = useNavigate();
   const handleSignOut = () => {
-    consumer.setIsLogin(false);
-    console.log(auth);
-    navigate("/");
+    auth.signOut().then(() => {
+      consumer.setSignIn(false);
+      navigate("/");
+      localStorage.clear("email", consumer.user.email);
+    });
   };
 
   return !login ? (
-    <SignUpScreen />
+    <LoginScreen />
   ) : (
     <div className={s.profileScreen}>
       <Nav />

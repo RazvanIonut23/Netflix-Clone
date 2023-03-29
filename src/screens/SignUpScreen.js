@@ -1,36 +1,46 @@
-import React, { useContext, useEffect, useState } from "react";
-import { auth, provider, providerF } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
-import s from "./SignUpScreen.module.css";
-import HomeScreen from "./HomeScreen";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { context } from "../App";
+import { auth, provider } from "../firebase";
+import HomeScreen from "./HomeScreen";
+import s from "./SignUpScreen.module.css";
 
 const SignUpScreen = () => {
-  const consumer = useContext(context);
+  const { user, setUser } = useContext(context);
   const navigate = useNavigate();
 
   const handleClick = () => {
     signInWithPopup(auth, provider).then((data) => {
-      consumer.setIsLogin(true);
+      setUser(data.user);
       localStorage.setItem("email", data.user.email);
       navigate("/home");
     });
   };
 
-  const handleClickFacebook = () => {
-    signInWithPopup(auth, providerF).then((data) => {
-      consumer.setIsLogin(true);
-      localStorage.setItem("email", data.user.email);
-      navigate("/home");
-    });
-  };
+  // const handleClickFacebook = () => {
+  //   signInWithPopup(auth, providerF).then((data) => {
+  //     setUser(data.user);
+  //     localStorage.setItem("email", data.user.email);
+  //     navigate("/home");
+  //   });
+  // };
 
   // useEffect(() => {
-  //   consumer.setIsLogin(localStorage.getItem("email"));
+  //   const unsubscribe = auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       setUser(user);
+  //       localStorage.setItem("email", user.email);
+  //       navigate("home");
+  //     }
+  //   });
+
+  //   return unsubscribe;
   // }, []);
 
-  return (
+  return user ? (
+    <HomeScreen />
+  ) : (
     <div className={s.signUpScreen}>
       <form>
         <h1>Sign In</h1>
@@ -38,9 +48,9 @@ const SignUpScreen = () => {
           <button type="submit" onClick={handleClick}>
             Sign In with google
           </button>
-          <button type="submit" onClick={handleClickFacebook}>
+          {/* <button type="submit" onClick={handleClickFacebook}>
             Sign In with faceBook
-          </button>
+          </button> */}
         </>
       </form>
     </div>

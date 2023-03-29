@@ -47,7 +47,7 @@ const Banner = () => {
           {movie?.title || movie?.name || movie?.original}
         </h1>
         <div className={s.bannerButtons}>
-          <Link to={`movie/${movie.id}`}>
+          <Link to={`/movie/${movie.id}`}>
             <button className={s.bannerButton}>Play</button>
           </Link>
         </div>

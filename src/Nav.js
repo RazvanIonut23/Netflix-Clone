@@ -21,7 +21,7 @@ const Nav = () => {
   return (
     <div className={`${s.nav} ${show && s.navBlack}`}>
       <div className={s.navContents}>
-        <Link to="/">
+        <Link to="/home">
           <img
             className={s.navLogo}
             src="https://download.logo.wine/logo/Netflix/Netflix-Logo.wine.png"

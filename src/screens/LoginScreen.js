@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect } from "react";
 import HomeScreen from "./HomeScreen";
+
 import s from "./LoginScreen.module.css";
 import SignUpScreen from "./SignUpScreen";
+import { context } from "../App";
+import { useNavigate } from "react-router-dom";
 
 const LoginScreen = (login) => {
-  const [signIn, setSignIn] = useState(false);
+  const consumer = useContext(context);
+  const navigate = useNavigate();
+  useEffect(
+    (user) => {
+      if (user) {
+        navigate("/home");
+      }
+    },
+    [consumer.user]
+  );
 
-  return (
+  return consumer.user ? (
+    <HomeScreen />
+  ) : (
     <div className={s.loginScreen}>
       <div className={s.loginScreenBackground}>
         <img
@@ -14,14 +28,10 @@ const LoginScreen = (login) => {
           src="https://images.ctfassets.net/4cd45et68cgf/7LrExJ6PAj6MSIPkDyCO86/542b1dfabbf3959908f69be546879952/Netflix-Brand-Logo.png?w=684&h=456"
           alt=""
         />
-        <button className={s.loginScreenButton} onClick={() => setSignIn(true)}>
-          Sign In
-        </button>
-
         <div className={s.loginScreenGradient} />
       </div>
       <div className={s.loginScreenBody}>
-        {signIn ? (
+        {consumer.signIn ? (
           <SignUpScreen />
         ) : (
           <>
@@ -38,9 +48,11 @@ const LoginScreen = (login) => {
 
                 <button
                   className={s.LoginScreenGetStarted}
-                  onClick={() => setSignIn(true)}
+                  onClick={() => {
+                    consumer.setSignIn(true);
+                  }}
                 >
-                  GET STARTED
+                  SIGN IN
                 </button>
               </form>
             </div>

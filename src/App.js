@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import "./App.css";
 import HomeScreen from "./screens/HomeScreen";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import LoginScreen from "./screens/LoginScreen";
 import { auth } from "./firebase";
 import ProfileScreen from "./screens/ProfileScreen";
@@ -10,29 +10,37 @@ import Movie from "./Movie";
 export const context = createContext(null);
 
 function App() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [user, setUser] = useState(null);
+  const [signIn, setSignIn] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const value = {
-    isLogin: isLogin,
-    setIsLogin: setIsLogin,
+    user: user,
+    setUser: setUser,
+    signIn: signIn,
+    setSignIn: setSignIn,
   };
 
   return (
     <context.Provider value={value}>
       <div className="App">
-        <Routes>
-          {isLogin === true && (
-            <Route path="/home" exact element={<HomeScreen />} />
-          )}
-          {isLogin === true && (
-            <Route exact path="/profile" element={<ProfileScreen />} />
-          )}
-          {isLogin === true && (
-            <Route exact path="movie/:id" element={<Movie />} />
-          )}
-
-          {isLogin === false && (
-            <Route exact path="/" element={<LoginScreen />} />
+        <Routes basename="/netflix-clone">
+          <Route path="/" element={<LoginScreen />} />
+          {user ? (
+            <>
+              <Route path="home" element={<HomeScreen />} />
+              <Route path="profile" element={<ProfileScreen />} />
+              <Route path="movie/:id" element={<Movie />} />
+            </>
+          ) : (
+            <Route path="/" element={<LoginScreen />} />
           )}
         </Routes>
       </div>
