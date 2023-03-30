@@ -46,7 +46,7 @@ const SignUpScreen = () => {
         <h1>Sign In</h1>
         <>
           <button type="submit" onClick={handleClick}>
-            Sign In with google
+            Sign In with Google
           </button>
           {/* <button type="submit" onClick={handleClickFacebook}>
             Sign In with faceBook
